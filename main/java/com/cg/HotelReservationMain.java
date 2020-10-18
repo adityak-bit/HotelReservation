@@ -8,9 +8,9 @@ import java.util.stream.Collectors;
 
 public class HotelReservationMain {
 
-	final Hotel LAKEWOOD = new Hotel("Lakewood", 110);
-	final Hotel BRIDGEWOOD = new Hotel("Bridgewood", 160);
-	final Hotel RIDGEWOOD = new Hotel("Ridgewood", 220);
+	final Hotel LAKEWOOD = new Hotel("Lakewood", 110, 90);
+	final Hotel BRIDGEWOOD = new Hotel("Bridgewood", 160, 50);
+	final Hotel RIDGEWOOD = new Hotel("Ridgewood", 220, 150);
 
 	static String checkInDate;
 	static String checkOutDate;
@@ -34,7 +34,7 @@ public class HotelReservationMain {
 
 	public String findCheapestHotelForGivenDateRangeConsideringWeekdayRatesOnly(String startDate, String endDate) {
 		int days = getTotalDays(startDate, endDate);
-		List<Integer> price = hotelList.parallelStream().map(hotel -> hotel.getWeekdayRatesForRegulars() * days)
+		List<Integer> price = hotelList.stream().map(hotel -> hotel.getWeekdayRatesForRegulars() * days)
 				.collect(Collectors.toList());
 		int minPrice = Collections.min(price);
 		Hotel cheapestHotel = hotelList.stream().filter(hotel -> hotel.getWeekdayRatesForRegulars() * days == minPrice)
