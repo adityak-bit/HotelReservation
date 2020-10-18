@@ -22,4 +22,11 @@ public class HotelReservationTest {
 		List<String> expectedList = new ArrayList<>(Arrays.asList("Lakewood","Bridgewood"));
 		Assert.assertEquals(expectedList, actualList);
 	}
+	
+	@Test
+	public void findCheapestBestRatedHotelForRewardsCustomer() {
+		HotelReservationMain hotelReservationMain = new HotelReservationMain();
+		String hotel = hotelReservationMain.findCheapestBestRatedHotelForRegulars("11Sep2020", "12Sep2020");
+		Assert.assertEquals("Bridgewood",hotel);
+	}
 }
