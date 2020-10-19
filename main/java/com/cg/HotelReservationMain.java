@@ -87,8 +87,29 @@ public class HotelReservationMain {
 		System.out.println("Hotel: "+hotel.getHotelName()+" ratings: "+hotel.getRatings()+" cost: "+price);
 		return hotel.getHotelName();
 	}
+	
+	public String findCheapestBestRatedHotelForRewards(String startDate, String endDate) {
+		int days = getTotalDays(startDate, endDate);
+		int weekends = getWeekends(startDate, endDate);
+		int weekdays = days - weekends;
+		List<Integer> price = hotelList.parallelStream().map(hotel -> totalPriceRewards(hotel, weekends, weekdays))
+				.collect(Collectors.toList());
+		int minPrice = Collections.min(price);
+		List<Hotel> cheapestHotelList = hotelList.stream()
+				.filter(hotel -> totalPriceRewards(hotel, weekends, weekdays) == minPrice).collect(Collectors.toList());
+		Hotel hotel = cheapestHotelList.stream().max(Comparator.comparing(Hotel::getRatings))
+				.orElseThrow(NoSuchElementException::new);
+			System.out.println("Cheapest hotel rewards: " + hotel.getHotelName() + " ratings: " + hotel.getRatings() + " cost: "
+					+ minPrice);
+		return hotel.getHotelName();
+	}
+	
 	public int totalPrice(Hotel hotel, int weekends, int weekdays) {
 		return hotel.getWeekdayRatesForRegulars() * weekdays + hotel.getWeekendRatesForRegulars() * weekends;
+	}
+
+	public int totalPriceRewards(Hotel hotel, int weekends, int weekdays) {
+		return hotel.getWeekdayRatesForRewards() * weekdays + hotel.getWeekendRatesForRewards() * weekends;
 	}
 
 	public int getWeekends(String checkInDate, String checkOutDate) {
